@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:;">
+  <title>Still Browser</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="chrome">
+    <div class="tab-strip"><div id="tabs" role="tablist" aria-label="Tabs"></div><button id="new-tab" class="icon add" title="New tab (Ctrl+T)" aria-label="New tab">+</button></div>
+    <nav class="toolbar" aria-label="Navigation">
+      <button id="back" class="icon" title="Back" aria-label="Back">‹</button><button id="forward" class="icon" title="Forward" aria-label="Forward">›</button><button id="reload" class="icon" title="Reload" aria-label="Reload">↻</button>
+      <form id="address-form"><span class="lock" aria-hidden="true">◈</span><select id="engine-select" class="engine-select" aria-label="Search engine"><option value="duckduckgo">DuckDuckGo</option><option value="google">Google</option></select><input id="address" autocomplete="off" spellcheck="false" aria-label="Search or enter address" placeholder="Search with DuckDuckGo or enter an address"><button id="bookmark" type="button" class="bookmark" title="Bookmark this page" aria-label="Bookmark this page">☆</button></form>
+      <button id="privacy" class="privacy-pill" title="Privacy settings"><span class="privacy-dot"></span><span id="privacy-label">Shields on</span></button>
+      <button id="private-mode" class="icon private-toggle" title="Open a private tab" aria-label="Open a private tab">◐</button>
+      <button id="extensions" class="icon private-toggle" title="Manage extensions" aria-label="Manage extensions">🧩</button>
+      <button id="theme-toggle" class="icon private-toggle" title="Switch to dark layout" aria-label="Switch to dark layout">◐</button>
+    </nav>
+  </header>
+  <main id="stage">
+    <section id="welcome" class="welcome">
+      <div class="welcome-layout">
+        <div class="welcome-main">
+          <p class="welcome-brand">still</p>
+          <p class="eyebrow">A little more room to think</p>
+          <h1>A calmer place to browse.</h1>
+          <p class="welcome-subtitle">Your web, with a little more space to think.</p>
+          <form id="welcome-form" class="welcome-search"><span class="search-mark" aria-hidden="true">⌕</span><select id="home-engine-select" class="engine-select" aria-label="Search engine"><option value="duckduckgo">DuckDuckGo</option><option value="google">Google</option></select><input id="welcome-address" autocomplete="off" placeholder="Search privately or enter an address"><button aria-label="Go">↗</button></form>
+          <div class="shortcuts-heading">Your shortcuts</div>
+          <div class="quick-links">
+            <button class="shortcut" data-url="https://duckduckgo.com"><span class="shortcut-icon ddg">D</span><span class="shortcut-copy"><b>DuckDuckGo</b><small>duckduckgo.com</small></span></button>
+            <button class="shortcut" data-url="https://www.wikipedia.org"><span class="shortcut-icon wiki">W</span><span class="shortcut-copy"><b>Wikipedia</b><small>wikipedia.org</small></span></button>
+            <button class="shortcut" data-url="https://developer.mozilla.org"><span class="shortcut-icon mdn">M</span><span class="shortcut-copy"><b>MDN Web Docs</b><small>developer.mozilla.org</small></span></button>
+            <button class="shortcut add-shortcut" type="button" title="Add a shortcut"><span class="shortcut-icon add-icon">+</span><span class="shortcut-copy"><b>Add a shortcut</b><small>Make this space yours</small></span></button>
+          </div>
+        </div>
+        <aside class="privacy-card">
+          <p class="privacy-eyebrow">A quieter kind of browsing</p>
+          <h2>Privacy, built in.</h2>
+          <p class="privacy-copy">Simple protections are already at work.</p>
+          <div class="privacy-rule"></div>
+          <ul><li>Common trackers blocked</li><li>Site permissions start private</li><li>Private tabs clear when closed</li></ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <footer><span id="status">Ready when you are</span><span class="footer-right"><span class="shield-small">⬡</span> Tracker blocking on <span class="separator">·</span> <span id="mode-label">Regular tab</span></span></footer>
+  <dialog id="privacy-dialog"><form method="dialog"><button class="close" aria-label="Close">×</button><span class="dialog-icon">⬡</span><p class="eyebrow">Your defaults</p><h2>Privacy, without the fuss.</h2><div class="setting"><div><b>Known tracker blocking</b><p>A built-in list blocks common analytics and ad hosts.</p></div><span class="on">ON</span></div><div class="setting"><div><b>Site permissions</b><p>Camera, microphone, location and notifications are denied.</p></div><span class="on">DENIED</span></div><div class="setting"><div><b>Private tabs</b><p>Private tabs use a temporary session and clear it when closed.</p></div><span class="on">ON</span></div><section class="blocked-sites"><b>Blocked sites</b><p>Add domains to stop Still from opening those websites on this device.</p><div class="block-domain-controls"><input id="blocked-domain-input" autocomplete="off" placeholder="example.com" aria-label="Domain to block"><button id="block-domain" type="button">Block site</button></div><p id="block-domain-status" class="block-domain-status" aria-live="polite"></p><ul id="blocked-domain-list" class="blocked-domain-list"></ul></section><p class="fineprint">This only affects Still Browser. It can’t stop school Wi-Fi or device-management monitoring, or change restrictions set by the network.</p><button class="done">Done</button></form></dialog>
+  <dialog id="extensions-dialog"><form method="dialog"><button class="close" aria-label="Close">×</button><span class="dialog-icon">🧩</span><p class="eyebrow">Add-ons</p><h2>Extensions</h2><p class="extension-help">Add an unpacked Chrome extension folder, or an unpacked Firefox WebExtension that uses APIs supported by Electron. Extensions can read and change site data according to their permissions.</p><div id="extension-list" class="extension-list"></div><p id="extension-status" class="extension-status" aria-live="polite"></p><button id="add-extension" class="done" type="button">Add extension folder</button><p class="fineprint">Electron supports only a subset of Chrome extension APIs. Packed .crx and .xpi files do not load directly; some Firefox add-ons may not work. Extensions run in regular tabs only. Review an extension before adding it.</p></form></dialog>
+  <script src="renderer.js"></script>
+</body>
+</html>

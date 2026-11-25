@@ -1,0 +1,21 @@
+{
+  "name": "still-browser",
+  "version": "0.1.0",
+  "description": "A calm, privacy-minded desktop browser prototype",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "package:win": "electron-packager . \"Still Browser\" --platform=win32 --arch=x64 --out=dist-platforms --overwrite --ignore=/node_modules --ignore=/dist --ignore=/dist-fixed --ignore=/dist-native --ignore=/dist-google --ignore=/dist-platforms --ignore=/dist-mac",
+    "package:mac": "npm run package:mac:arm64 && npm run package:mac:x64",
+    "package:mac:arm64": "electron-packager . \"Still Browser\" --platform=darwin --arch=arm64 --out=dist-platforms --overwrite --ignore=/node_modules --ignore=/dist --ignore=/dist-fixed --ignore=/dist-native --ignore=/dist-google --ignore=/dist-platforms --ignore=/dist-mac",
+    "package:mac:x64": "electron-packager . \"Still Browser\" --platform=darwin --arch=x64 --out=dist-platforms --overwrite --ignore=/node_modules --ignore=/dist --ignore=/dist-fixed --ignore=/dist-native --ignore=/dist-google --ignore=/dist-platforms --ignore=/dist-mac"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "electron": "^45.5.0"
+  },
+  "allowScripts": {
+    "electron@45.5.0": true
+  }
+}

@@ -1,0 +1,82 @@
+name: Build browser downloads
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build ${{ matrix.platform }} ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macOS
+            arch: arm64
+            runner: macos-latest
+            script: package:mac:arm64
+          - platform: macOS
+            arch: x64
+            runner: macos-latest
+            script: package:mac:x64
+          - platform: Windows
+            arch: x64
+            runner: windows-latest
+            script: package:win
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Package app
+        run: npm run ${{ matrix.script }}
+
+      - name: Create macOS download archive
+        if: matrix.platform == 'macOS'
+        run: ditto -c -k --sequesterRsrc --keepParent "dist-platforms/Still Browser-darwin-${{ matrix.arch }}/Still Browser.app" "dist-platforms/Still-Browser-macOS-${{ matrix.arch }}.zip"
+
+      - name: Create Windows download archive
+        if: matrix.platform == 'Windows'
+        shell: pwsh
+        run: Compress-Archive -Path "dist-platforms/Still Browser-win32-x64" -DestinationPath "dist-platforms/Still-Browser-Windows-x64.zip"
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: Still-Browser-${{ matrix.platform }}-${{ matrix.arch }}
+          path: dist-platforms/Still-Browser-${{ matrix.platform }}-${{ matrix.arch }}.zip
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    name: Publish GitHub release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download platform builds
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          pattern: Still-Browser-*
+          merge-multiple: true
+
+      - name: Publish downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: gh release create "$RELEASE_TAG" release-assets/*.zip --title "$RELEASE_TAG" --generate-notes
